@@ -33,3 +33,15 @@ jobs:
 
       - name: Run tests
         run: npm test
+      
+      - name: Build Docker image
+        working-directory: .
+        run: docker build -t shopflow-api:${{ github.sha }} -f api/Dockerfile ./api
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: shopflow-api:${{ github.sha }}
+          format: table
+          severity: CRITICAL,HIGH
+          exit-code: '1'
