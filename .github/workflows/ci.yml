@@ -28,8 +28,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run app smoke test
-        run: |
-          node index.js &
-          sleep 2
-          curl --fail http://localhost:3000/health
+      - name: Run tests
+        run: npm test
