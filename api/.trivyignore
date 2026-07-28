@@ -1,0 +1,5 @@
+# CVE-2026-14257: brace-expansion vulnerability lives inside npm's own
+# internal CLI tooling (usr/local/lib/node_modules/npm/...), not in our
+# application's dependency tree or runtime code path. Not exploitable via
+# our API surface. Accepted until upstream npm ships a patched version.
+CVE-2026-14257

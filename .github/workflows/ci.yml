@@ -21,15 +21,28 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: api/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run lint
         run: npm run lint
 
       - name: Run tests
         run: npm test
+      
+      - name: Build Docker image
+        working-directory: .
+        run: docker build -t shopflow-api:${{ github.sha }} -f api/Dockerfile ./api
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: shopflow-api:${{ github.sha }}
+          format: table
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          trivyignores: api/.trivyignore
