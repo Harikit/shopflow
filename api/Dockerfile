@@ -2,6 +2,8 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+RUN npm install -g npm@11.7.0
+
 COPY package*.json ./
 RUN npm install --production
 
