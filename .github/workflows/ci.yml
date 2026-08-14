@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: api/package-lock.json
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Run tests
         run: npm test
-      
+
       - name: Build Docker image
         working-directory: .
         run: docker build -t shopflow-api:${{ github.sha }} -f api/Dockerfile ./api
@@ -46,3 +46,19 @@ jobs:
           severity: CRITICAL,HIGH
           exit-code: '1'
           trivyignores: api/.trivyignore
+
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker tag shopflow-api:${{ github.sha }} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/shopflow-api:${{ github.sha }}
+
+          docker push \
+            ${{ secrets.DOCKERHUB_USERNAME }}/shopflow-api:${{ github.sha }}
