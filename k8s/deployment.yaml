@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopflow-api
+  namespace: shopflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopflow-api
+  template:
+    metadata:
+      labels:
+        app: shopflow-api
+    spec:
+      containers:
+        - name: shopflow-api
+          image: harikit/shopflow-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              protocol: TCP
