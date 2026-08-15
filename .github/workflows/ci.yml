@@ -62,3 +62,18 @@ jobs:
 
           docker push \
             ${{ secrets.DOCKERHUB_USERNAME }}/shopflow-api:${{ github.sha }}
+
+      - name: Deploy to Kubernetes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/shopflow-api:${{ github.sha }}
+
+            sudo kubectl -n shopflow set image deployment/shopflow-api \
+              shopflow-api=$IMAGE
+
+            sudo kubectl -n shopflow rollout status deployment/shopflow-api
