@@ -71,9 +71,19 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/shopflow-api:${{ github.sha }}
+           cd /home/ec2-user/shopflow
 
-            sudo kubectl -n shopflow set image deployment/shopflow-api \
-              shopflow-api=$IMAGE
+           git fetch origin
+           git reset --hard origin/main
 
-            sudo kubectl -n shopflow rollout status deployment/shopflow-api
+           sudo kubectl apply -f k8s/namespace.yaml
+           sudo kubectl apply -f k8s/deployment.yaml
+           sudo kubectl apply -f k8s/service.yaml
+           sudo kubectl apply -f k8s/ingress.yaml
+
+           IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/shopflow-api:${{ github.sha }}
+
+           sudo kubectl -n shopflow set image deployment/shopflow-api \
+           shopflow-api=$IMAGE
+
+           sudo kubectl -n shopflow rollout status deployment/shopflow-api
