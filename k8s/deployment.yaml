@@ -5,18 +5,48 @@ metadata:
   namespace: shopflow
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: shopflow-api
+
   template:
     metadata:
       labels:
         app: shopflow-api
+
     spec:
       containers:
         - name: shopflow-api
           image: harikit/shopflow-api:latest
           imagePullPolicy: Always
+
           ports:
             - containerPort: 3000
               protocol: TCP
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
