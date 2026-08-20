@@ -589,3 +589,6 @@ These are intentionally listed as future improvements and are not currently part
 
 The goal of ShopFlow is to demonstrate an end-to-end DevOps workflow where infrastructure, application packaging, testing, security scanning, deployment, monitoring, and operational recovery are automated and reproducible.
 
+<img width="1235" height="1057" alt="Screenshot 2026-08-20 at 12 01 07 AM" src="https://github.com/user-attachments/assets/da1a43b4-8d01-42db-93db-1e4c292d46b3" />
+<img width="1716" height="970" alt="Screenshot 2026-08-20 at 12 01 28 AM" src="https://github.com/user-attachments/assets/7d5b1d49-f60b-4e26-a922-e2642656942f" />
+
